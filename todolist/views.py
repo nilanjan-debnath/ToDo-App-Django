@@ -10,7 +10,9 @@ def index(request):
 @require_http_methods(["POST"])
 def add(request):
     title = request.POST["title"]
-    todo = Todo(title=title)
+    details = request.POST["details"]
+    finishtime = request.POST["finishtime"]
+    todo = Todo(title=title, details=details, finishtime=finishtime)
     todo.save()
     return redirect("index")
 

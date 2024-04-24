@@ -20,22 +20,34 @@
                 <form action="/add" method="post">
                     {% csrf_token %}
                     <div class="field">
-                        <label class="title">Todo Title</label>
-                        <input class="input" type="text" name="title" placeholder="Enter Todo..." required/><br />
+                        <div>
+                          <label class="title">Todo Title</label>
+                          <input class="input" style="width: 25rem;" type="text" name="title" placeholder="Enter Todo title" required/><br />
+                        </div>
+                        <textarea class="input" name="details" style="height: 5rem; resize: none;" placeholder="Todo Details...." ></textarea><br />
+                        <div style="display: flex; justify-content: space-between">
+                          <div>
+                            <label class="title">Todo Date</label>
+                            <input class="input" style="width: 6rem;" type="date" name="finishtime"/><br />
+                          </div>
+                          <button class="button" type="submit">Add</button>
+                        </div>
                     </div>
-                    <button class="button" type="submit">Add</button>
                 </form>
             </div>
             <div class="list_todo section">
               <h2 class="headline">ToDo List</h2>
+              <div class="todos">
                 {% for todo in todo_list %}
-                <div class="todos">
-                    <p class="title">{{ todo.id }} | {{ todo.title }}</p>
-
+                <div class="todo">
                     {% if todo.complete == False %}
-                    <span>Not Complete</span>
-                    {% else %}
-                    <span>Completed</span>
+                    <div style="display: flex; justify-content: space-between;">
+                      <p class="todo_title">{{ todo.id }} | {{ todo.title }}</p>
+                      <p class="date"> {{ todo.finishtime }} </p>
+                    </div>
+                    <p class="details"> {{ todo.details }} </p>
+                    {% else %}  
+                    <p class="todo_title" style="text-decoration: line-through;">{{ todo.id }} | {{ todo.title }}</p>
                     {% endif %}
                     <form style="display: none" id="update_form{{ todo.id }}" class="update_form" action="/update/{{ todo.id }}" method="post">
                       {% csrf_token %}
@@ -53,10 +65,11 @@
                     <div class="button_list">
                       <a class="button" onclick="show_updateform('{{ todo.id }}')" id="update_btn{{ todo.id }}">Update</a>
                       <a class="button" href="/complete/{{ todo.id }}">Complete</a>
-                      <a class="button" href="/delete/{{ todo.id }}">Delete</a>
+                      <button class="button" onclick="delete_todo( '{{todo.id}}' )">Delete</button>
                     </div>
                 </div>
                 {% endfor %}
+              </div>
             </div>
       </div>
     </div>
@@ -67,7 +80,7 @@
   body{
     margin: 0;
     padding: 0;
-    background-color: #D3D9D4;
+    background-color: #748d92;
   }
   p{
     margin: 0;
@@ -81,14 +94,14 @@
     justify-content: center;
     align-items: center;
     padding: 20px;
-    height: 7vh;
+    height: 3rem;
   }
   header>pre{
     font-family: "Jersey 10 Charted", sans-serif;
     font-weight: 400;
     font-size: 4rem;
     font-style: normal;
-    color: #124e66;
+    color: #fff;
   }
   .main{
     display: flex;
@@ -104,8 +117,8 @@
     align-items: center;
   }
   .add_todo{
-    width: 35vw;
-    height: 35vh;
+    width: 35rem;
+    height: 20rem;
   }
   .field{
     display: flex;
@@ -119,13 +132,21 @@
     height: 30px;
     border-radius: 10px;
     padding: 5px;
+    background-color: #d3d9d4;
   }
   .list_todo{
-    width: 60vw;
+    width: 55rem;
   }
   .todos{
+    display: flex;
+    justify-content: start;
+    flex-wrap: wrap;
+    width: 55rem;
+  }
+  .todo{
     background-color: #2E3944;
-    width: 58vw;
+    max-width: 52rem;
+    min-width: 25rem;
     margin: 5px;
     border-radius: 10px;
     padding: 10px;
@@ -134,6 +155,29 @@
     color: #D3D9D4;
     font-size: larger;
     padding: 10px;
+  }
+  .todo_title{
+    color: #D3D9D4;
+    padding: 0 1rem;
+    font-size: 2rem;
+  }
+  .date{
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    font-family: monospace;
+  }
+  .details{
+    color: #fff;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    max-height: 5rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
+    text-align: justify;
   }
   .button_list{
     display: flex;
@@ -144,12 +188,12 @@
     text-decoration: none;
     margin: 5px 10px;
     appearance: none;
-    background-color: #D3D9D4;
+    background-color: #124e66;
     border-radius: 15px;
     border-style: none;
     box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px, rgba(0, 0, 0, .14) 0 6px 10px 0, rgba(0, 0, 0, .12) 0 1px 18px 0;
     box-sizing: border-box;
-    color: #124e66;
+    color: #fff;
     cursor: pointer;
     display: inline-flex;
     fill: currentcolor;
@@ -214,5 +258,10 @@
     const update_form = document.getElementById("update_form"+id);
     const cancel_update = document.getElementById("cancel_update"+id);
     update_form.classList.remove("show");
+  }
+  function delete_todo(id){
+    if(confirm("Are you sure?")){
+      window.location.href="/delete/"+id
+    }
   }
 </script>
