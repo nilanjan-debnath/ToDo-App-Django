@@ -19,7 +19,9 @@ def add(request):
 def update(request, todo_id):
     todo = Todo.objects.get(id=todo_id)
     title = request.POST["title"]
+    details = request.POST["details"]
     todo.title = title
+    todo.details = details
     todo.save()
     return redirect("index")
 

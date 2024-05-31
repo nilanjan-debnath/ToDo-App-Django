@@ -20,18 +20,18 @@
                 <form action="/add" method="post">
                     {% csrf_token %}
                     <div class="field">
+                      <div>
+                        <label class="title">Todo Title</label>
+                        <input class="input" style="width: 25rem;" type="text" name="title" placeholder="Enter Todo title" required/><br />
+                      </div>
+                      <textarea class="input" name="details" style="height: 5rem; resize: none;" placeholder="ToDo Details...." ></textarea><br />
+                      <div style="display: flex; justify-content: space-between">
                         <div>
-                          <label class="title">Todo Title</label>
-                          <input class="input" style="width: 25rem;" type="text" name="title" placeholder="Enter Todo title" required/><br />
+                          <label class="title">Todo Date</label>
+                          <input class="input" style="width: 6rem;" type="date" name="finishtime" required/><br />
                         </div>
-                        <textarea class="input" name="details" style="height: 5rem; resize: none;" placeholder="Todo Details...." ></textarea><br />
-                        <div style="display: flex; justify-content: space-between">
-                          <div>
-                            <label class="title">Todo Date</label>
-                            <input class="input" style="width: 6rem;" type="date" name="finishtime"/><br />
-                          </div>
-                          <button class="button" type="submit">Add</button>
-                        </div>
+                        <button class="button" type="submit">Add</button>
+                      </div>
                     </div>
                 </form>
             </div>
@@ -54,7 +54,8 @@
                       <div class="section" id="update">
                           <div class="field">
                               <label class="title">Todo Title</label>
-                              <input class="input" type="text" name="title" placeholder="Enter Todo..." value="{{ todo.title }}" required/><br />
+                              <input class="input" type="text" name="title" placeholder="Update ToDo title" value="{{ todo.title }}" required/><br />
+                              <textarea class="input" name="details" style="height: 5rem; resize: none;" placeholder="Update ToDo Details...."> {{ todo.details}} </textarea><br />
                           </div>
                           <div class="button_list">
                             <button class="button" type="button" onclick="hide_updateform('{{ todo.id }}')" id="cancel_update{{ todo.id }}">Cancel</button>
@@ -64,7 +65,11 @@
                     </form>
                     <div class="button_list">
                       <a class="button" onclick="show_updateform('{{ todo.id }}')" id="update_btn{{ todo.id }}">Update</a>
+                      {% if todo.complete == False %}
                       <a class="button" href="/complete/{{ todo.id }}">Complete</a>
+                      {% else %} 
+                      <a class="button" href="/complete/{{ todo.id }}">Not Complete</a>
+                      {% endif %}
                       <button class="button" onclick="delete_todo( '{{todo.id}}' )">Delete</button>
                     </div>
                 </div>
