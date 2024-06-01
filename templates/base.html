@@ -17,17 +17,17 @@
         <div class="main">
             <div class="add_todo section">
                 <h2 class="headline">Add ToDo</h2>
-                <form action="/add" method="post">
+                <form action="/add" method="post" style="width: -webkit-fill-available;">
                     {% csrf_token %}
                     <div class="field">
-                      <div>
-                        <label class="title">Todo Title</label>
-                        <input class="input" style="width: 25rem;" type="text" name="title" placeholder="Enter Todo title" required/><br />
+                      <div style="display: flex;">
+                        <label class="title" style="text-wrap: nowrap;">Todo Title</label>
+                        <input class="input" type="text" name="title" placeholder="Enter Todo title" required/><br />
                       </div>
-                      <textarea class="input" name="details" style="height: 5rem; resize: none;" placeholder="ToDo Details...." ></textarea><br />
+                      <textarea class="input" name="details" style="height: 3rem; resize: none;" placeholder="ToDo Details...." ></textarea><br />
                       <div style="display: flex; justify-content: space-between">
                         <div>
-                          <label class="title">Todo Date</label>
+                          <label class="title" style="text-wrap: nowrap;">Todo Date</label>
                           <input class="input" style="width: 6rem;" type="date" name="finishtime" required/><br />
                         </div>
                         <button class="button" type="submit">Add</button>
@@ -42,25 +42,29 @@
                 <div class="todo">
                     {% if todo.complete == False %}
                     <div style="display: flex; justify-content: space-between;">
-                      <p class="todo_title">{{ todo.id }} | {{ todo.title }}</p>
+                      <p class="todo_title">{{ todo.title }}</p>
                       <p class="date"> {{ todo.finishtime }} </p>
                     </div>
                     <p class="details"> {{ todo.details }} </p>
                     {% else %}  
-                    <p class="todo_title" style="text-decoration: line-through;">{{ todo.id }} | {{ todo.title }}</p>
+                    <p class="todo_title" style="text-decoration: line-through;">{{ todo.title }}</p>
                     {% endif %}
                     <form style="display: none" id="update_form{{ todo.id }}" class="update_form" action="/update/{{ todo.id }}" method="post">
                       {% csrf_token %}
-                      <div class="section" id="update">
-                          <div class="field">
-                              <label class="title">Todo Title</label>
-                              <input class="input" type="text" name="title" placeholder="Update ToDo title" value="{{ todo.title }}" required/><br />
-                              <textarea class="input" name="details" style="height: 5rem; resize: none;" placeholder="Update ToDo Details...."> {{ todo.details}} </textarea><br />
-                          </div>
-                          <div class="button_list">
-                            <button class="button" type="button" onclick="hide_updateform('{{ todo.id }}')" id="cancel_update{{ todo.id }}">Cancel</button>
-                            <button class="button" type="submit">Update</button>
-                          </div>
+                      <div id="update_section">
+                        <div class="section" id="update">
+                            <div class="field">
+                                <div style="display: flex;">
+                                  <label class="title" style="text-wrap: nowrap;">Todo Title</label>
+                                  <input class="input" type="text" name="title" placeholder="Update ToDo title" value="{{ todo.title }}" required/><br />
+                                </div>
+                                <textarea class="input" name="details" style="height: 5rem; resize: none;" placeholder="Update ToDo Details....">{{ todo.details}}</textarea><br />
+                            </div>
+                            <div class="button_list">
+                              <button class="button" type="button" onclick="hide_updateform('{{ todo.id }}')" id="cancel_update{{ todo.id }}">Cancel</button>
+                              <button class="button" type="submit">Update</button>
+                            </div>
+                        </div>
                       </div>
                     </form>
                     <div class="button_list">
@@ -112,18 +116,21 @@
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-evenly;
+    flex-wrap: wrap;
   }
   .section{
     background-color: #212a31;
     border-radius: 10px;
     padding: 10px;
+    margin: 5px;
+    min-width: 20rem;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
   .add_todo{
-    width: 35rem;
-    height: 20rem;
+    height: 15rem;
+    /* width: 35rem; */
   }
   .field{
     display: flex;
@@ -133,25 +140,56 @@
     color: #D3D9D4;
   }
   .input{
-    width: 33vw;
     height: 30px;
+    width: -webkit-fill-available;
     border-radius: 10px;
     padding: 5px;
     background-color: #d3d9d4;
   }
-  .list_todo{
-    width: 55rem;
+  @media only screen and (max-width: 768px){
+    .add_todo{
+      width: 90vw;
+    }
+    .list_todo{
+      width: 90vw;
+    }
+    .todo{
+      width: 80vw;
+      max-width: 50rem;
+    }
+  }
+  @media only screen and (min-width: 768px){
+    .add_todo{
+      width: 90vw;
+    }
+    .list_todo{
+      width: 90vw;
+    }
+    .todo{
+      max-width: 50rem;
+    }
+  }
+  @media only screen and (min-width: 1008px){
+    .add_todo{
+      max-width: 30rem;
+      width: 40vw;
+    }
+    .list_todo{
+      width: calc(100% - 35rem);
+    }
+    .todo{
+      min-width: calc(100% - 40rem);
+      max-width: 50rem;
+    }
   }
   .todos{
     display: flex;
-    justify-content: start;
+    justify-content: center;
     flex-wrap: wrap;
-    width: 55rem;
+
   }
   .todo{
     background-color: #2E3944;
-    max-width: 52rem;
-    min-width: 25rem;
     margin: 5px;
     border-radius: 10px;
     padding: 10px;
@@ -187,6 +225,7 @@
   .button_list{
     display: flex;
     justify-content: start;
+    flex-wrap: wrap;
   }
   .button{
     align-items: center;
@@ -245,13 +284,19 @@
     align-content: center;
     justify-content: center;
   }
-  #update{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50vw;
-    transform: translate(50%, 50%);
+  #update_section{
+    height: -webkit-fill-available;
+    margin-top: 10%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: flex-start;
   }
+  #update{
+    width: 40vw;
+  }
+  
+  
 </style>
 <script>
   function show_updateform(id){
