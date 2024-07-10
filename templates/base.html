@@ -38,7 +38,7 @@
             <div class="list_todo section">
               <h2 class="headline">ToDo List</h2>
               <div class="todos">
-                {% for todo in todo_list %}
+                {% for todo in todo_list|dictsort:"finishtime" %}
                 <div class="todo">
                     {% if todo.complete == False %}
                     <div style="display: flex; justify-content: space-between;">
